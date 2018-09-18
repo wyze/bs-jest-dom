@@ -1,0 +1,16 @@
+# Dependencies
+coverage
+node_modules
+
+# Build
+src/**/*.bs.js
+lib
+.bsb.lock
+.merlin
+extend-expect.js
+
+# Logs
+*.log
+
+# macOS
+.*DS_Store

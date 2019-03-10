@@ -7,7 +7,6 @@ src/**/*.bs.js
 lib
 .bsb.lock
 .merlin
-extend-expect.js
 
 # Logs
 *.log

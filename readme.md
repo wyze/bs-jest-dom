@@ -1,8 +1,4 @@
-# bs-jest-dom
-
-[![Build Status][travis-image]][travis-url]
-[![npm][npm-image]][npm-url]
-[![Coveralls][coveralls-image]][coveralls-url]
+# bs-jest-dom &middot; [![Build Status][circleci-image]][circleci-url] [![npm][npm-image]][npm-url] [![Coveralls][coveralls-image]][coveralls-url]
 
 > [BuckleScript](//github.com/BuckleScript/bucklescript) bindings for [jest-dom](//github.com/gnapse/jest-dom).
 
@@ -22,18 +18,17 @@ $ npm install --save-dev bs-jest-dom
 
 ```json
 {
-  "bs-dev-dependencies": [
-    "bs-jest-dom"
-  ]
+  "bs-dev-dependencies": ["bs-jest-dom"]
 }
 ```
 
 #### With [`bs-jest`](//github.com/glennsl/bs-jest) and [`bs-react-testing-library`](//github.com/wyze/bs-react-testing-library)
 
 ```ocaml
-/* A_test.re */
+/* Heading_test.re */
 
 open Jest;
+open Expect;
 open JestDom;
 open ReactTestingLibrary;
 
@@ -47,13 +42,36 @@ module Heading = {
   };
 };
 
-test("renders with text", () =>
+test("renders in the document", () =>
   <Heading text="Hello, World!" />
   |> render
   |> getByText(~matcher=`Str("Hello, World!"))
   |> expect
   |> toBeInTheDocument
 );
+```
+
+#### With [`bs-jest`](//github.com/glennsl/bs-jest) and [`bs-webapi`](//github.com/reasonml-community/bs-webapi-incubator)
+
+```ocaml
+/* Heading_test.re */
+
+open Jest;
+open Expect;
+open JestDom;
+open Webapi.Dom;
+open Webapi.Dom.Element;
+
+test("heading is visible", () => {
+  let div = Document.createElement("div", document);
+
+  div->setInnerHTML("<h1>Hello, World!</h1>");
+
+  div
+  |> querySelector("h1")
+  |> expect
+  |> toBeVisible;
+});
 ```
 
 ## Examples
@@ -86,14 +104,14 @@ $ yarn test
 
 ### [v1.0.0](https://github.com/wyze/bs-jest-dom/releases/tag/v1.0.0) (2018-09-18)
 
-* [[`d1575b8514`](https://github.com/wyze/bs-jest-dom/commit/d1575b8514)] - Initial commit (Neil Kistner)
+- [[`d1575b8514`](https://github.com/wyze/bs-jest-dom/commit/d1575b8514)] - Initial commit (Neil Kistner)
 
 ## License
 
 MIT © [Neil Kistner](https://neilkistner.com)
 
-[travis-image]: https://img.shields.io/travis/wyze/bs-jest-dom.svg?style=flat-square
-[travis-url]: https://travis-ci.org/wyze/bs-jest-dom
+[circleci-image]: https://img.shields.io/circleci/project/github/wyze/bs-jest-dom.svg?style=flat-square
+[circleci-url]: https://circleci.com/gh/wyze/bs-jest-dom
 
 [npm-image]: https://img.shields.io/npm/v/bs-jest-dom.svg?style=flat-square
 [npm-url]: https://npm.im/bs-jest-dom

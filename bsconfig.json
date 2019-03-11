@@ -26,5 +26,8 @@
   ],
   "bs-dependencies": [
     "@glennsl/bs-jest"
+  ],
+  "bs-dev-dependencies": [
+    "bs-webapi"
   ]
 }

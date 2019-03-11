@@ -1,408 +1,277 @@
-open Jest;
-open JestDom;
+[%bs.raw {|require('jest-dom/extend-expect')|}];
 
-let (
-  jestExpect,
-  toBeDefined,
-  toThrow
-) = (
-  Expect.expect,
-  ExpectJs.toBeDefined,
-  Expect.toThrow
+open Jest;
+open Expect;
+open JestDom;
+open Webapi.Dom;
+open Webapi.Dom.Element;
+
+let render = html => {
+  let body = Document.createElement("body", document);
+
+  body->setInnerHTML(html);
+
+  document->Document.unsafeAsHtmlDocument->HtmlDocument.setBody(body);
+
+  body;
+};
+
+let queryByTestId = (id: string) =>
+  querySelector({j|[data-testid="$(id)"]|j});
+
+afterEach(() =>
+  switch (document->Document.unsafeAsHtmlDocument->HtmlDocument.body) {
+  | Some(body) => body->setInnerHTML("")
+  | None => raise(Failure("Not document body found"))
+  }
 );
 
-let div = [%raw {|document.createElement('div')|}];
+test("toBeDisabled", () =>
+  render({|<button disabled data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toBeDisabled
+);
 
-external convert: ex => Js.t({ .. }) = "%identity";
+test("not toBeDisabled", () =>
+  render({|<button data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toBeDisabled
+);
 
-[@bs.send] external focus: Dom.element => unit = "";
+test("toBeEnabled", () =>
+  render({|<button data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toBeEnabled
+);
 
-type q = Js.t({
-  .
-  container: Dom.element,
-  [@bs.meth] queryByTestId: string => Dom.element
+test("not toBeEnabled", () =>
+  render({|<button disabled data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toBeEnabled
+);
+
+test("toBeInTheDocument", () =>
+  render({|<button data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toBeInTheDocument
+);
+
+test("not toBeInTheDocument", () =>
+  render({|<button></button>|})
+  |> (
+    _ =>
+      Document.createElement("div", document)->Some
+      |> expect
+      |> not_
+      |> toBeInTheDocument
+  )
+);
+
+test("toBeVisible", () =>
+  render({|<button data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toBeVisible
+);
+
+test("not toBeVisible", () =>
+  render({|<button style="display: none" data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toBeVisible
+);
+
+test("toContainElement", () => {
+  let element = render({|<span data-testid="span"><button></button></span>|});
+
+  element
+  |> queryByTestId("span")
+  |> expect
+  |> (document->Document.documentElement |> querySelector("button"))
+     ->toContainElement;
 });
 
-let render: string => q = [%raw {|
-  function(html) {
-    const container = document.createElement('div')
-    container.innerHTML = html
-    const queryByTestId = testId =>
-      container.querySelector(`[data-testid="${testId}"]`)
-    return {container, queryByTestId}
-  }
-|}];
-
-describe("JestDom", () => {
-  let jsDomExpect = expect(div) |> convert;
-
-  test("expect", () =>
-    jsDomExpect |> Js.Undefined.return |> jestExpect |> toBeDefined
-  );
-
-  test("not_", () =>
-    div
-    |> expect
-    |> not_
-    |> convert
-    |> Js.Undefined.return
-    |> jestExpect
-    |> toBeDefined
-  );
-
-  test("toBeDisabled", () => {
-    let result = render({|<button disabled data-testid="button">x</button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> toBeDisabled;
-    let _ =
-      (() => expectResult |> not_ |> toBeDisabled) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("not toBeDisabled", () => {
-    let result = render({|<button data-testid="button">x</button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> not_ |> toBeDisabled;
-    let _ =
-      (() => expectResult |> toBeDisabled) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toBeEmpty", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> toBeEmpty;
-    let _ =
-      (() => expectResult |> not_ |> toBeEmpty) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("not toBeEmpty", () => {
-    let result = render({|<button data-testid="button">x</button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> not_ |> toBeEmpty;
-    let _ =
-      (() => expectResult |> toBeEmpty) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toBeInTheDocument", () => {
-    let _ = [%bs.raw {|
-      document.body.innerHTML = '<button data-testid="button"></button>'
-    |}];
-
-    let result: Dom.element =
-      [%raw {|document.querySelector('[data-testid="button"]')|}];
-    let expectResult = expect(result);
-
-    let _ = expectResult |> toBeInTheDocument;
-    let _ =
-      (() => expectResult |> not_ |> toBeInTheDocument)
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toBeInTheDocument", () => {
-    let _ = [%bs.raw {|
-      document.body.innerHTML = '<button data-testid="button"></button>'
-    |}];
-
-    let result: Dom.element =
-      [%raw {|document.querySelector('[data-testid="no-button"]')|}];
-    let expectResult = expect(result);
-
-    let _ = expectResult |> not_ |> toBeInTheDocument;
-    let _ = (() => expectResult |> toBeInTheDocument) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toBeVisible", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> toBeVisible;
-    let _ =
-      (() => expectResult |> not_ |> toBeVisible) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("not toBeVisible", () => {
-    let result = render({|
-      <button style="display: none" data-testid="button">x</button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> not_ |> toBeEmpty;
-    let _ =
-      (() => expectResult |> toBeEmpty) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toContainElement", () => {
-    let result = render({|
-      <button data-testid="button"><span data-testid="element"></span></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-    let element = Js.Nullable.return(result##queryByTestId("element"));
-
-    let _ = expectResult->toContainElement(element);
-    let _ =
-      (() => (expectResult |> not_)->toContainElement(element))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toContainElement", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-    let element = Js.Nullable.return(result##queryByTestId("element"));
-
-    let _ = (expectResult |> not_)->toContainElement(element);
-    let _ =
-      (() => expectResult->toContainElement(element)) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toContainHTML", () => {
-    let result = render({|
-      <button data-testid="button"><span data-testid="element"></span></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-    let html = {|<span data-testid="element"></span>|};
-
-    let _ = expectResult->toContainHTML(html);
-    let _ =
-      (() => (expectResult |> not_)->toContainHTML(html))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toContainHTML", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-    let html = {|<span data-testid="element"></span>|};
-
-    let _ = (expectResult |> not_)->toContainHTML(html);
-    let _ = (() => expectResult->toContainHTML(html)) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveAttribute", () => {
-    let result = render({|
-      <button data-testid="button" type="submit"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult->toHaveAttribute("type");
-    let _ =
-      (() => (expectResult |> not_)->toHaveAttribute("type"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveAttribute", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = (expectResult |> not_)->toHaveAttribute("type");
-    let _ =
-      (() => expectResult->toHaveAttribute("type")) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveAttributeWithValue", () => {
-    let result = render({|
-      <button data-testid="button" type="submit"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult->toHaveAttributeWithValue("type", "submit");
-    let _ =
-      (() => (expectResult |> not_)->toHaveAttributeWithValue("type", "submit"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveAttributeWithValue", () => {
-    let result = render({|
-      <button data-testid="button" type="button"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = (expectResult |> not_)->toHaveAttributeWithValue("type", "submit");
-    let _ =
-      (() => expectResult->toHaveAttributeWithValue("type", "submit"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveClass", () => {
-    let result = render({|<button class="btn" data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult->toHaveClass("btn");
-    let _ =
-      (() => (expectResult |> not_)->toHaveClass("btn"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveClass", () => {
-    let result = render({|<button class="btn" data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = (expectResult |> not_)->toHaveClass("not-btn");
-    let _ =
-      (() => expectResult->toHaveClass("not-btn")) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveClass2", () => {
-    let result = render({|
-      <button class="btn active" data-testid="button"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult->toHaveClass2("btn", "active");
-    let _ =
-      (() => (expectResult |> not_)->toHaveClass2("btn", "active"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveClass2", () => {
-    let result = render({|
-      <button class="btn secondary" data-testid="button"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = (expectResult |> not_)->toHaveClass2("not-btn", "secondary");
-    let _ =
-      (() => expectResult->toHaveClass2("not-btn", "secondary"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveFocus", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let element = result##queryByTestId("button");
-    let expectResult = expect(element);
-
-    element |> focus;
-
-    let _ = expectResult |> toHaveFocus;
-    let _ =
-      (() => expectResult |> not_ |> toHaveFocus) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveFocus", () => {
-    let result = render({|<button data-testid="button"></button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult |> not_ |> toHaveFocus;
-    let _ = (() => expectResult |> toHaveFocus) |> jestExpect |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveStyle", () => {
-    let result = render({|
-      <button data-testid="button" style="cursor: pointer"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult->toHaveStyle("cursor: pointer");
-    let _ =
-      (() => (expectResult |> not_)->toHaveStyle("cursor: pointer"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveStyle", () => {
-    let result = render({|
-      <button data-testid="button" style="cursor: pointer"></button>
-    |});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = (expectResult |> not_)->toHaveStyle("color: rebeccapurple");
-    let _ =
-      (() => expectResult->toHaveStyle("color: rebeccapurple"))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("toHaveTextContent", () => {
-    let result = render({|<button data-testid="button">Submit</button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = expectResult->toHaveTextContent(`Str("Submit"));
-    let _ = expectResult->toHaveTextContent(`RegExp([%re "/Submit/"]));
-    let _ =
-      (() => (expectResult |> not_)->toHaveTextContent(`Str("Close")))
-      |> jestExpect
-      |> toThrow;
-    let _ =
-      (() => (expectResult |> not_)->toHaveTextContent(`RegExp([%re "/Close/"])))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
-
-  test("not toHaveTextContent", () => {
-    let result = render({|<button data-testid="button">Submit</button>|});
-    let expectResult = expect(result##queryByTestId("button"));
-
-    let _ = (expectResult |> not_)->toHaveTextContent(`Str("Close"));
-    let _ = (expectResult |> not_)->toHaveTextContent(`RegExp([%re "/Close/"]));
-    let _ =
-      (() => expectResult->toHaveTextContent(`Str("Submit")))
-      |> jestExpect
-      |> toThrow;
-    let _ =
-      (() => expectResult->toHaveTextContent(`RegExp([%re "/Submit/"])))
-      |> jestExpect
-      |> toThrow;
-
-    pass;
-  });
+test("not toContainElement", () => {
+  let element = render({|<span data-testid="span"></span>|});
+
+  element
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> Document.createElement("div", document)->Some->toContainElement;
 });
+
+test("toContainHTML", () =>
+  render({|<span data-testid="span"><p></p></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toContainHTML("<p></p>")
+);
+
+test("not toContainHTML", () =>
+  render({|<span data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toContainHTML("<p></p>")
+);
+
+test("toHaveAttribute", () =>
+  render({|<span class="empty" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveAttribute("class")
+);
+
+test("not toHaveAttribute", () =>
+  render({|<span data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveAttribute("class")
+);
+
+test("toHaveAttribute with value", () =>
+  render({|<span class="empty" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveAttribute("class", ~value="empty")
+);
+
+test("not toHaveAttribute with value", () =>
+  render({|<span class="hidden" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveAttribute("class", ~value="empty")
+);
+
+test("toHaveClass", () =>
+  render({|<span class="empty" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveClass("empty")
+);
+
+test("not toHaveClass", () =>
+  render({|<span data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveClass("empty")
+);
+
+test("toHaveClassMany", () =>
+  render({|<span class="empty hidden" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveClassMany(["empty", "hidden"])
+);
+
+test("not toHaveClassMany", () =>
+  render({|<span class="hidden" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveClassMany(["empty", "hidden"])
+);
+
+test("toHaveFocus", () => {
+  let element = render({|<span tabindex="1" data-testid="span"></span>|});
+
+  switch (element |> queryByTestId("span")) {
+  | Some(el) => el->Element.unsafeAsHtmlElement->HtmlElement.focus
+  | None => raise(Failure("Element not found"))
+  };
+
+  element |> queryByTestId("span") |> expect |> toHaveFocus;
+});
+
+test("not toHaveFocus", () =>
+  render({|<span data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveFocus
+);
+
+test("toHaveFormValues", () =>
+  render(
+    {|<form data-testid="form"><label for="title">Job title</label><input type="text" id="title" name="title" value="CEO" /></form>|},
+  )
+  |> queryByTestId("form")
+  |> expect
+  |> toHaveFormValues({"title": "CEO"})
+);
+
+test("not toHaveFormValues", () =>
+  render(
+    {|<form data-testid="form"><label for="title">Job title</label><input type="text" id="title" name="title" value="CEO" /></form>|},
+  )
+  |> queryByTestId("form")
+  |> expect
+  |> not_
+  |> toHaveFormValues({"title": "CTO"})
+);
+
+test("toHaveStyle", () =>
+  render({|<span style="color: rebeccapurple" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveStyle("color: rebeccapurple")
+);
+
+test("not toHaveStyle", () =>
+  render({|<span style="display: none" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveStyle("display: inline-block")
+);
+
+test("toHaveTextContent", () =>
+  render({|<span data-testid="span">Step 1 of 4</span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveTextContent("Step 1 of 4")
+);
+
+test("not toHaveTextContent", () =>
+  render({|<span data-testid="span">Step 2 of 4</span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveTextContent("Step 1 of 4")
+);
+
+test("toHaveTextContent with options", () => {
+  let options = TextContent.makeOptions(~normalizeWhitespace=false, ());
+
+  render({|<span data-testid="span">&nbsp;&nbsp;Step 1 of 4</span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveTextContent("  Step 1 of 4", ~options);
+});
+
+test("toHaveTextContentRe", () =>
+  render({|<span data-testid="span">Step 1 of 4</span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveTextContentRe([%bs.re "/Step \\d of \\d/"])
+);
+
+test("not toHaveTextContentRe", () =>
+  render({|<span data-testid="span">Step 2 of 4</span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveTextContentRe([%bs.re "/^\\d of 4$/"])
+);

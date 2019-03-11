@@ -1,18 +1,31 @@
-type ex;
-[@bs.val] external expect: Dom.element => ex = "";
-[@bs.get] external not_: ex => ex = "not";
+type t = option(Dom.element);
+type modifier('a) = [ | `Just('a) | `Not('a)];
 
-let toBeDisabled: ex => Jest.assertion;
-let toBeEmpty: ex => Jest.assertion;
-let toBeInTheDocument: ex => Jest.assertion;
-let toBeVisible: ex => Jest.assertion;
-let toContainElement: (ex, Js.Nullable.t(Dom.element)) => Jest.assertion;
-let toContainHTML: (ex, string) => Jest.assertion;
-let toHaveAttribute: (ex, string) => Jest.assertion;
-let toHaveAttributeWithValue: (ex, string, string) => Jest.assertion;
-let toHaveClass: (ex, string) => Jest.assertion;
-let toHaveClass2: (ex, string, string) => Jest.assertion;
-let toHaveFocus: ex => Jest.assertion;
-let toHaveStyle: (ex, string) => Jest.assertion;
+module TextContent: {
+  type options = {. "normalizeWhitespace": Js.undefined(bool)};
+
+  [@bs.obj]
+  external makeOptions: (~normalizeWhitespace: bool=?, unit) => options = "";
+};
+
+let toBeDisabled: [< modifier(t)] => Jest.assertion;
+let toBeEnabled: [< modifier(t)] => Jest.assertion;
+let toBeInTheDocument: [< modifier(t)] => Jest.assertion;
+let toBeVisible: [< modifier(t)] => Jest.assertion;
+let toContainElement: (t, [< | `Just(t) | `Not(t)]) => Jest.assertion;
+let toContainHTML: (string, [< | `Just(t) | `Not(t)]) => Jest.assertion;
+let toHaveAttribute:
+  (string, ~value: string=?, [< | `Just(t) | `Not(t)]) => Jest.assertion;
+let toHaveClass: (string, [< | `Just(t) | `Not(t)]) => Jest.assertion;
+let toHaveClassMany:
+  (list(string), [< | `Just(t) | `Not(t)]) => Jest.assertion;
+let toHaveFocus: [< modifier(t)] => Jest.assertion;
+let toHaveFormValues:
+  (Js.t({..}), [< | `Just(t) | `Not(t)]) => Jest.assertion;
+let toHaveStyle: (string, [< | `Just(t) | `Not(t)]) => Jest.assertion;
 let toHaveTextContent:
-  (ex, [ `RegExp(Js.Re.t) | `Str(string) ]) => Jest.assertion;
+  (string, ~options: TextContent.options=?, [< | `Just(t) | `Not(t)]) =>
+  Jest.assertion;
+let toHaveTextContentRe:
+  (Js.Re.t, ~options: TextContent.options=?, [< | `Just(t) | `Not(t)]) =>
+  Jest.assertion;

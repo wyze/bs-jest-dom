@@ -83,6 +83,7 @@ See [`src/__tests__`](src/__tests__) for some examples.
 ```sh
 $ git clone https://github.com/wyze/bs-jest-dom.git
 $ cd bs-jest-dom
+$ yarn add @glennsl/bs-jest # or `npm install @glennsl/bs-jest`
 $ yarn # or `npm install`
 ```
 

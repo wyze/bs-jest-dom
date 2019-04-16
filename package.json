@@ -34,8 +34,10 @@
     "dom"
   ],
   "dependencies": {
-    "@glennsl/bs-jest": "^0.4.8",
     "jest-dom": "^3.1.2"
+  },
+  "peerDependency": {
+    "@glennsl/bs-jest": "^0.4.8"
   },
   "devDependencies": {
     "@wyze/changelog": "^1.0.0",

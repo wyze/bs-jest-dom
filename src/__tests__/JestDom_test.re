@@ -37,7 +37,7 @@ test("not toBeDisabled", () =>
   render({|<button data-testid="button"></button>|})
   |> queryByTestId("button")
   |> expect
-  |> not_
+  |> not
   |> toBeDisabled
 );
 
@@ -52,7 +52,7 @@ test("not toBeEnabled", () =>
   render({|<button disabled data-testid="button"></button>|})
   |> queryByTestId("button")
   |> expect
-  |> not_
+  |> not
   |> toBeEnabled
 );
 
@@ -69,7 +69,7 @@ test("not toBeInTheDocument", () =>
     _ =>
       Document.createElement("div", document)->Some
       |> expect
-      |> not_
+      |> not
       |> toBeInTheDocument
   )
 );
@@ -85,7 +85,7 @@ test("not toBeVisible", () =>
   render({|<button style="display: none" data-testid="button"></button>|})
   |> queryByTestId("button")
   |> expect
-  |> not_
+  |> not
   |> toBeVisible
 );
 
@@ -105,7 +105,7 @@ test("not toContainElement", () => {
   element
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> Document.createElement("div", document)->Some->toContainElement;
 });
 
@@ -120,7 +120,7 @@ test("not toContainHTML", () =>
   render({|<span data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toContainHTML("<p></p>")
 );
 
@@ -135,7 +135,7 @@ test("not toHaveAttribute", () =>
   render({|<span data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveAttribute("class")
 );
 
@@ -150,7 +150,7 @@ test("not toHaveAttribute with value", () =>
   render({|<span class="hidden" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveAttribute("class", ~value="empty")
 );
 
@@ -165,7 +165,7 @@ test("not toHaveClass", () =>
   render({|<span data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveClass("empty")
 );
 
@@ -180,7 +180,7 @@ test("not toHaveClassMany", () =>
   render({|<span class="hidden" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveClassMany(["empty", "hidden"])
 );
 
@@ -199,7 +199,7 @@ test("not toHaveFocus", () =>
   render({|<span data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveFocus
 );
 
@@ -218,7 +218,7 @@ test("not toHaveFormValues", () =>
   )
   |> queryByTestId("form")
   |> expect
-  |> not_
+  |> not
   |> toHaveFormValues({"title": "CTO"})
 );
 
@@ -233,7 +233,7 @@ test("not toHaveStyle", () =>
   render({|<span style="display: none" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveStyle("display: inline-block")
 );
 
@@ -248,7 +248,7 @@ test("not toHaveTextContent", () =>
   render({|<span data-testid="span">Step 2 of 4</span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveTextContent("Step 1 of 4")
 );
 
@@ -272,6 +272,6 @@ test("not toHaveTextContentRe", () =>
   render({|<span data-testid="span">Step 2 of 4</span>|})
   |> queryByTestId("span")
   |> expect
-  |> not_
+  |> not
   |> toHaveTextContentRe([%bs.re "/^\\d of 4$/"])
 );

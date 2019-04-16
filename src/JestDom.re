@@ -38,7 +38,7 @@ let mapMod = f =>
   | `Not(expected) => `Not(f(expected));
 
 let toJestAssertion = expected =>
-  Jest.Expect.((() => expected)->Jest.Expect.expect->not_->toThrow);
+  Jest.Expect.((() => expected)->Jest.Expect.expect->not->toThrow);
 
 let affirm =
   fun

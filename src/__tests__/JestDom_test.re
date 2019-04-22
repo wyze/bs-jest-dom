@@ -16,8 +16,11 @@ let render = html => {
   body;
 };
 
-let queryByTestId = (id: string) =>
-  querySelector({j|[data-testid="$(id)"]|j});
+let queryByTestId = (id: string, element: Dom.element) =>
+  switch (element |> querySelector({j|[data-testid="$(id)"]|j})) {
+  | Some(el) => el
+  | None => raise(Failure("Element not found"))
+  };
 
 afterEach(() =>
   switch (document->Document.unsafeAsHtmlDocument->HtmlDocument.body) {
@@ -67,7 +70,7 @@ test("not toBeInTheDocument", () =>
   render({|<button></button>|})
   |> (
     _ =>
-      Document.createElement("div", document)->Some
+      Document.createElement("div", document)
       |> expect
       |> not_
       |> toBeInTheDocument
@@ -95,7 +98,12 @@ test("toContainElement", () => {
   element
   |> queryByTestId("span")
   |> expect
-  |> (document->Document.documentElement |> querySelector("button"))
+  |> (
+       switch (document->Document.documentElement |> querySelector("button")) {
+       | Some(el) => el
+       | None => raise(Failure("Element not found"))
+       }
+     )
      ->toContainElement;
 });
 
@@ -106,7 +114,7 @@ test("not toContainElement", () => {
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> Document.createElement("div", document)->Some->toContainElement;
+  |> Document.createElement("div", document)->toContainElement;
 });
 
 test("toContainHTML", () =>
@@ -187,10 +195,10 @@ test("not toHaveClassMany", () =>
 test("toHaveFocus", () => {
   let element = render({|<span tabindex="1" data-testid="span"></span>|});
 
-  switch (element |> queryByTestId("span")) {
-  | Some(el) => el->Element.unsafeAsHtmlElement->HtmlElement.focus
-  | None => raise(Failure("Element not found"))
-  };
+  "span"
+  ->queryByTestId(element)
+  ->Element.unsafeAsHtmlElement
+  ->HtmlElement.focus;
 
   element |> queryByTestId("span") |> expect |> toHaveFocus;
 });

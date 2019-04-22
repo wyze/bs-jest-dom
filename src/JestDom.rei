@@ -1,4 +1,4 @@
-type t = option(Dom.element);
+type t = Dom.element;
 type modifier('a) = [ | `Just('a) | `Not('a)];
 
 module TextContent: {

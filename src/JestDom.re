@@ -1,7 +1,7 @@
 /* Bring in all of the matchers. */
 [%bs.raw {|require('jest-dom/extend-expect')|}];
 
-type t = option(Dom.element);
+type t = Dom.element;
 type modifier('a) = [ | `Just('a) | `Not('a)];
 
 module TextContent = {

@@ -1,5 +1,9 @@
 ## Change Log
 
+### [v2.0.1](https://github.com/wyze/bs-jest-dom/releases/tag/v2.0.1) (2019-04-22)
+
+* Change expected type from option to non-option ([@wyze](https://github.com/wyze) in [957a67d](https://github.com/wyze/bs-jest-dom/commit/957a67d))
+
 ### [v2.0.0](https://github.com/wyze/bs-jest-dom/releases/tag/v2.0.0) (2019-03-11)
 
 * Rewrite to better interface with bs-jest ([@wyze](https://github.com/wyze) in [010b440](https://github.com/wyze/bs-jest-dom/commit/010b440))

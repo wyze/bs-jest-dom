@@ -34,10 +34,10 @@
     "dom"
   ],
   "dependencies": {
-    "@glennsl/bs-jest": "^0.4.8",
     "jest-dom": "^3.1.2"
   },
   "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.8",
     "@wyze/changelog": "^1.0.0",
     "@wyze/github-release": "^1.0.0",
     "bs-platform": "^4.0.18",

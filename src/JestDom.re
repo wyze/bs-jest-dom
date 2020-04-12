@@ -28,7 +28,7 @@ type assertion =
   | HaveTextContentRe(modifier((t, Js.Re.t, option(TextContent.options))))
     : assertion;
 
-[@bs.val] external expect: t => Js.t({..}) = "";
+[@bs.val] external expect: t => Js.t({..}) = "expect";
 
 let joinList = lst => lst->Array.of_list |> Js.Array.joinWith(" ");
 

@@ -1,6 +1,6 @@
 {
   "name": "bs-jest-dom",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "BuckleScript bindings for jest-dom.",
   "repository": "wyze/bs-jest-dom",
   "author": {

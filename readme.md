@@ -102,9 +102,10 @@ $ yarn test
 
 > [Full Change Log](changelog.md)
 
-### [v2.0.1](https://github.com/wyze/bs-jest-dom/releases/tag/v2.0.1) (2019-04-22)
+### [v2.0.2](https://github.com/wyze/bs-jest-dom/releases/tag/v2.0.2) (2020-04-12)
 
-* Change expected type from option to non-option ([@wyze](https://github.com/wyze) in [957a67d](https://github.com/wyze/bs-jest-dom/commit/957a67d))
+* Upgrade devDependencies to latest versions ([@wyze](https://github.com/wyze) in [b9302fa](https://github.com/wyze/bs-jest-dom/commit/b9302fa))
+* Move bs-jest to devDependencies ([@jihchi](https://github.com/jihchi) in [#11](https://github.com/wyze/bs-jest-dom/pull/11))
 
 ## License
 

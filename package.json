@@ -6,7 +6,7 @@
   "author": {
     "name": "Neil Kistner",
     "email": "neil.kistner@gmail.com",
-    "url": "neilkistner.com"
+    "url": "https://neilkistner.com"
   },
   "license": "MIT",
   "files": [
@@ -18,13 +18,14 @@
     "build": "bsb -make-world",
     "clean": "run-p clean:*",
     "clean:bsb": "bsb -clean-world",
-    "clean:project": "rimraf lib .merlin",
+    "clean:project": "rimraf _coverage lib .merlin *.coverage",
     "jest": "jest",
     "postversion": "github-release",
     "prebuild": "yarn clean",
     "pretest": "yarn build",
     "preversion": "yarn build",
     "test": "yarn jest",
+    "test:coverage": "BISECT_ENABLE=yes yarn test",
     "version": "changelog"
   },
   "keywords": [
@@ -40,6 +41,7 @@
     "@glennsl/bs-jest": "^0.4.8",
     "@wyze/changelog": "^1.0.0",
     "@wyze/github-release": "^1.0.0",
+    "bisect_ppx": "^2.3.0",
     "bs-platform": "^4.0.18",
     "bs-webapi": "^0.13.4",
     "npm-run-all": "^4.1.5",

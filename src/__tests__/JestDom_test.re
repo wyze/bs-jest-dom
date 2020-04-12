@@ -1,5 +1,7 @@
 [%bs.raw {|require('jest-dom/extend-expect')|}];
 
+[@coverage exclude_file];
+
 open Jest;
 open Expect;
 open JestDom;
@@ -21,6 +23,8 @@ let queryByTestId = (id: string, element: Dom.element) =>
   | Some(el) => el
   | None => raise(Failure("Element not found"))
   };
+
+afterAll(Bisect.Runtime.write_coverage_data);
 
 afterEach(() =>
   switch (document->Document.unsafeAsHtmlDocument->HtmlDocument.body) {

@@ -4,6 +4,9 @@
     "-bs-no-version-header",
     "-bs-super-errors"
   ],
+  "ppx-flags":[
+    "bisect_ppx/ppx"
+  ],
   "reason": {
     "react-jsx": 2
   },
@@ -25,7 +28,8 @@
     }
   ],
   "bs-dependencies": [
-    "@glennsl/bs-jest"
+    "@glennsl/bs-jest",
+    "bisect_ppx"
   ],
   "bs-dev-dependencies": [
     "bs-webapi"

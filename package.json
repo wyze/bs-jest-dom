@@ -41,7 +41,7 @@
     "@glennsl/bs-jest": "^0.5.1",
     "@wyze/changelog": "^1.0.0",
     "@wyze/github-release": "^1.1.1",
-    "bisect_ppx": "^2.3.0",
+    "bisect_ppx": "^2.3.1",
     "bs-platform": "^7.2.2",
     "bs-webapi": "^0.15.9",
     "npm-run-all": "^4.1.5",

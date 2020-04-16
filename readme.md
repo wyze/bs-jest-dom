@@ -1,4 +1,4 @@
-# bs-jest-dom &middot; [![Build Status][circleci-image]][circleci-url] [![npm][npm-image]][npm-url] [![Coveralls][coveralls-image]][coveralls-url]
+# bs-jest-dom &middot; [![Build Status][actions-image]][actions-url] [![npm][npm-image]][npm-url] [![Codecov][codecov-image]][codecov-url]
 
 > [BuckleScript](//github.com/BuckleScript/bucklescript) bindings for [jest-dom](//github.com/gnapse/jest-dom).
 
@@ -22,7 +22,7 @@ $ npm install --save-dev bs-jest-dom
 }
 ```
 
-#### With [`bs-jest`](//github.com/glennsl/bs-jest) and [`bs-react-testing-library`](//github.com/wyze/bs-react-testing-library)
+#### With [`bs-jest`](//github.com/glennsl/bs-jest) and [`bs-jest-dom`](//github.com/wyze/bs-jest-dom)
 
 ```ocaml
 /* Heading_test.re */
@@ -111,11 +111,11 @@ $ yarn test
 
 MIT © [Neil Kistner](https://neilkistner.com)
 
-[circleci-image]: https://img.shields.io/circleci/project/github/wyze/bs-jest-dom.svg?style=flat-square
-[circleci-url]: https://circleci.com/gh/wyze/bs-jest-dom
+[actions-image]: https://img.shields.io/github/workflow/status/wyze/bs-jest-dom/CI.svg?style=flat-square
+[actions-url]: https://github.com/wyze/bs-jest-dom/actions
 
 [npm-image]: https://img.shields.io/npm/v/bs-jest-dom.svg?style=flat-square
 [npm-url]: https://npm.im/bs-jest-dom
 
-[coveralls-image]: https://img.shields.io/coveralls/github/wyze/bs-jest-dom.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/github/wyze/bs-jest-dom
+[codecov-image]: https://img.shields.io/codecov/c/github/wyze/bs-jest-dom.svg?style=flat-square
+[codecov-url]: https://codecov.io/github/wyze/bs-jest-dom

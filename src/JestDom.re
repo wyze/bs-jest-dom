@@ -86,16 +86,16 @@ let affirm =
     expect(expected)##(!)##toHaveStyle(style)
   | HaveTextContent(`Just(expected, text, opts)) =>
     expect(expected)##toHaveTextContent(text, Js.Undefined.fromOption(opts))
+  | HaveTextContentRe(`Just(expected, re, opts)) =>
+    expect(expected)##toHaveTextContent(re, Js.Undefined.fromOption(opts))
   | HaveTextContent(`Not(expected, text, opts)) =>
     expect(expected)##(!)##toHaveTextContent(
       text,
       Js.Undefined.fromOption(opts),
     )
-  | HaveTextContentRe(`Just(expected, text, opts)) =>
-    expect(expected)##toHaveTextContent(text, Js.Undefined.fromOption(opts))
-  | HaveTextContentRe(`Not(expected, text, opts)) =>
+  | HaveTextContentRe(`Not(expected, re, opts)) =>
     expect(expected)##(!)##toHaveTextContent(
-      text,
+      re,
       Js.Undefined.fromOption(opts),
     );
 
@@ -127,13 +127,18 @@ let toHaveAttribute = (attribute, ~value=?, expected) =>
   ->toJestAssertion;
 
 let toHaveClass = (class_, expected) =>
-  HaveClass(mapMod(exp => (exp, class_), expected))
-  ->affirm
-  ->toJestAssertion;
-
-let toHaveClassMany = (classes, expected) =>
-  HaveClass(mapMod(exp => (exp, classes->joinList), expected))
-  ->affirm
+  HaveClass(
+    mapMod(
+      exp => (
+        exp,
+        switch (class_) {
+        | `Str(s) => s
+        | `Lst(lst) => lst->joinList
+        },
+      ),
+      expected,
+    ),
+  )
   ->toJestAssertion;
 
 let toHaveFocus = expected =>
@@ -147,12 +152,15 @@ let toHaveFormValues = (values, expected) =>
 let toHaveStyle = (style, expected) =>
   HaveStyle(mapMod(exp => (exp, style), expected))->affirm->toJestAssertion;
 
-let toHaveTextContent = (text, ~options=?, expected) =>
-  HaveTextContent(mapMod(exp => (exp, text, options), expected))
+let toHaveTextContent = (content, ~options=?, expected) =>
+  (
+    switch (content) {
+    | `RegExp(re) =>
+      HaveTextContentRe(mapMod(exp => (exp, re, options), expected))
+    | `Str(text) =>
+      HaveTextContent(mapMod(exp => (exp, text, options), expected))
+    }
+  )
   ->affirm
   ->toJestAssertion;
 
-let toHaveTextContentRe = (text, ~options=?, expected) =>
-  HaveTextContentRe(mapMod(exp => (exp, text, options), expected))
-  ->affirm
-  ->toJestAssertion;

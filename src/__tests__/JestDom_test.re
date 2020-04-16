@@ -166,34 +166,34 @@ test("not toHaveAttribute with value", () =>
   |> toHaveAttribute("class", ~value="empty")
 );
 
-test("toHaveClass", () =>
+test("toHaveClass (string)", () =>
   render({|<span class="empty" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveClass("empty")
+  |> toHaveClass(`Str("empty"))
 );
 
-test("not toHaveClass", () =>
+test("not toHaveClass (string)", () =>
   render({|<span data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> toHaveClass("empty")
+  |> toHaveClass(`Str("empty"))
 );
 
-test("toHaveClassMany", () =>
+test("toHaveClass (list)", () =>
   render({|<span class="empty hidden" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveClassMany(["empty", "hidden"])
+  |> toHaveClass(`Lst(["empty", "hidden"]))
 );
 
-test("not toHaveClassMany", () =>
+test("not toHaveClass (list)", () =>
   render({|<span class="hidden" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> toHaveClassMany(["empty", "hidden"])
+  |> toHaveClass(`Lst(["empty", "hidden"]))
 );
 
 test("toHaveFocus", () => {
@@ -249,41 +249,41 @@ test("not toHaveStyle", () =>
   |> toHaveStyle("display: inline-block")
 );
 
-test("toHaveTextContent", () =>
+test("toHaveTextContent (string)", () =>
   render({|<span data-testid="span">Step 1 of 4</span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveTextContent("Step 1 of 4")
+  |> toHaveTextContent(`Str("Step 1 of 4"))
 );
 
-test("not toHaveTextContent", () =>
+test("not toHaveTextContent (string)", () =>
   render({|<span data-testid="span">Step 2 of 4</span>|})
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> toHaveTextContent("Step 1 of 4")
+  |> toHaveTextContent(`Str("Step 1 of 4"))
 );
 
-test("toHaveTextContent with options", () => {
+test("toHaveTextContent (string) with options", () => {
   let options = TextContent.makeOptions(~normalizeWhitespace=false, ());
 
   render({|<span data-testid="span">&nbsp;&nbsp;Step 1 of 4</span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveTextContent("  Step 1 of 4", ~options);
+  |> toHaveTextContent(`Str("  Step 1 of 4"), ~options);
 });
 
-test("toHaveTextContentRe", () =>
+test("toHaveTextContent (regex)", () =>
   render({|<span data-testid="span">Step 1 of 4</span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveTextContentRe([%bs.re "/Step \\d of \\d/"])
+  |> toHaveTextContent(`RegExp([%bs.re "/Step \\d of \\d/"]))
 );
 
-test("not toHaveTextContentRe", () =>
+test("not toHaveTextContent (regex)", () =>
   render({|<span data-testid="span">Step 2 of 4</span>|})
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> toHaveTextContentRe([%bs.re "/^\\d of 4$/"])
+  |> toHaveTextContent(`RegExp([%bs.re "/^\\d of 4$/"]))
 );

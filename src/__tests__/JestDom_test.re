@@ -24,7 +24,7 @@ let queryByTestId = (id: string, element: Dom.element) =>
   | None => raise(Failure("Element not found"))
   };
 
-// afterAll(Bisect.Runtime.write_coverage_data);
+afterAll(Bisect.Runtime.write_coverage_data);
 
 afterEach(() =>
   switch (document->Document.unsafeAsHtmlDocument->HtmlDocument.body) {

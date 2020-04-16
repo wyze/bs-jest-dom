@@ -24,4 +24,3 @@ let toHaveStyle: (string, [< modifier(t)]) => Jest.assertion;
 let toHaveTextContent:
   ([`RegExp(Js.Re.t) | `Str(string)], ~options: TextContent.options=?, [< modifier(t)]) =>
   Jest.assertion;
-  Jest.assertion;

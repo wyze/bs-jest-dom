@@ -10,7 +10,11 @@ module TextContent: {
 
 let toBeDisabled: [< modifier(t)] => Jest.assertion;
 let toBeEnabled: [< modifier(t)] => Jest.assertion;
+let toBeEmpty: [< modifier(t)] => Jest.assertion;
 let toBeInTheDocument: [< modifier(t)] => Jest.assertion;
+let toBeInvalid: [< modifier(t)] => Jest.assertion;
+let toBeRequired: [< modifier(t)] => Jest.assertion;
+let toBeValid: [< modifier(t)] => Jest.assertion;
 let toBeVisible: [< modifier(t)] => Jest.assertion;
 let toContainElement: (t, [< modifier(t)]) => Jest.assertion;
 let toContainHTML: (string, [< modifier(t)]) => Jest.assertion;
@@ -24,3 +28,10 @@ let toHaveStyle: (string, [< modifier(t)]) => Jest.assertion;
 let toHaveTextContent:
   ([`RegExp(Js.Re.t) | `Str(string)], ~options: TextContent.options=?, [< modifier(t)]) =>
   Jest.assertion;
+let toHaveValue:
+  ([`Str(string) | `Lst(list(string)) | `Num(int)], [< modifier(t)]) =>
+  Jest.assertion;
+let toHaveDisplayValue:
+  ([`Str(string) | `Lst(list(string))], [< modifier(t)]) =>
+  Jest.assertion;
+let toBeChecked: [< modifier(t)] => Jest.assertion;

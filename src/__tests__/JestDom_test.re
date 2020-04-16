@@ -1,5 +1,3 @@
-[%bs.raw {|require('jest-dom/extend-expect')|}];
-
 [@coverage exclude_file];
 
 open Jest;

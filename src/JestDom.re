@@ -1,5 +1,5 @@
 /* Bring in all of the matchers. */
-[%bs.raw {|require('jest-dom/extend-expect')|}];
+[%bs.raw {|require('@testing-library/jest-dom')|}];
 
 type t = Dom.element;
 type modifier('a) = [ | `Just('a) | `Not('a)];
@@ -14,7 +14,11 @@ module TextContent = {
 type assertion =
   | BeDisabled(modifier(t)): assertion
   | BeEnabled(modifier(t)): assertion
+  | BeEmpty(modifier(t)): assertion
   | BeInTheDocument(modifier(t)): assertion
+  | BeInvalid(modifier(t)): assertion
+  | BeRequired(modifier(t)): assertion
+  | BeValid(modifier(t)): assertion
   | BeVisible(modifier(t)): assertion
   | ContainElement(modifier((t, t))): assertion
   | ContainHTML(modifier((t, string))): assertion
@@ -26,7 +30,10 @@ type assertion =
   | HaveTextContent(modifier((t, string, option(TextContent.options))))
     : assertion
   | HaveTextContentRe(modifier((t, Js.Re.t, option(TextContent.options))))
-    : assertion;
+    : assertion
+  | HaveValue(modifier((t, [`Str(string) | `Lst(list(string)) | `Num(int)]))) : assertion
+  | HaveDisplayValue(modifier((t, [`Str(string) | `Lst(list(string))]))) : assertion
+  | BeChecked(modifier((t))) : assertion;
 
 [@bs.val] external expect: t => Js.t({..}) = "expect";
 
@@ -46,10 +53,18 @@ let affirm =
   | BeDisabled(`Not(expected)) => expect(expected)##(!)##toBeDisabled()
   | BeEnabled(`Just(expected)) => expect(expected)##toBeEnabled()
   | BeEnabled(`Not(expected)) => expect(expected)##(!)##toBeEnabled()
+  | BeEmpty(`Just(expected)) => expect(expected)##toBeEmpty()
+  | BeEmpty(`Not(expected)) => expect(expected)##(!)##toBeEmpty()
   | BeInTheDocument(`Just(expected)) =>
     expect(expected)##toBeInTheDocument()
   | BeInTheDocument(`Not(expected)) =>
     expect(expected)##(!)##toBeInTheDocument()
+  | BeInvalid(`Just(expected)) => expect(expected)##toBeInvalid()
+  | BeInvalid(`Not(expected)) => expect(expected)##(!)##toBeInvalid()
+  | BeRequired(`Just(expected)) => expect(expected)##toBeRequired()
+  | BeRequired(`Not(expected)) => expect(expected)##(!)##toBeRequired()
+  | BeValid(`Just(expected)) => expect(expected)##toBeValid()
+  | BeValid(`Not(expected)) => expect(expected)##(!)##toBeValid()
   | BeVisible(`Just(expected)) => expect(expected)##toBeVisible()
   | BeVisible(`Not(expected)) => expect(expected)##(!)##toBeVisible()
   | ContainElement(`Just(expected, element)) =>
@@ -97,13 +112,31 @@ let affirm =
     expect(expected)##(!)##toHaveTextContent(
       re,
       Js.Undefined.fromOption(opts),
-    );
+    )
+  | HaveValue(`Just(expected, value)) => expect(expected)##toHaveValue(value)
+  | HaveValue(`Not(expected, value)) => expect(expected)##(!)##toHaveValue(value)
+  | HaveDisplayValue(`Just(expected, value)) => expect(expected)##toHaveDisplayValue(value)
+  | HaveDisplayValue(`Not(expected, value)) => expect(expected)##(!)##toHaveDisplayValue(value)
+  | BeChecked(`Just(expected)) => expect(expected)##toBeChecked()
+  | BeChecked(`Not(expected)) => expect(expected)##(!)##toBeChecked();
 
 let toBeDisabled = expected =>
   BeDisabled((expected :> modifier(_)))->affirm->toJestAssertion;
 
 let toBeEnabled = expected =>
   BeEnabled((expected :> modifier(_)))->affirm->toJestAssertion;
+
+let toBeEmpty = expected =>
+  BeEmpty((expected :> modifier(_)))->affirm->toJestAssertion;
+
+let toBeInvalid = expected =>
+  BeInvalid((expected :> modifier(_)))->affirm->toJestAssertion;
+
+let toBeRequired = expected =>
+  BeRequired((expected :> modifier(_)))->affirm->toJestAssertion;
+
+let toBeValid = expected =>
+  BeValid((expected :> modifier(_)))->affirm->toJestAssertion;
 
 let toBeInTheDocument = expected =>
   BeInTheDocument((expected :> modifier(_)))->affirm->toJestAssertion;
@@ -164,3 +197,15 @@ let toHaveTextContent = (content, ~options=?, expected) =>
   ->affirm
   ->toJestAssertion;
 
+let toHaveValue = (value, expected) =>
+  HaveValue(mapMod(exp => (exp, value), expected))
+  ->affirm
+  ->toJestAssertion;
+
+let toHaveDisplayValue = (value, expected) =>
+  HaveDisplayValue(mapMod(exp => (exp, value), expected))
+  ->affirm
+  ->toJestAssertion;
+
+let toBeChecked = expected =>
+  BeChecked((expected :> modifier(_)))->affirm->toJestAssertion;

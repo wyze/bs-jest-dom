@@ -23,9 +23,7 @@ type assertion =
   | HaveFocus(modifier(t)): assertion
   | HaveFormValues(modifier((t, Js.t({..})))): assertion
   | HaveStyle(modifier((t, string))): assertion
-  | HaveTextContent(modifier((t, string, option(TextContent.options))))
-    : assertion
-  | HaveTextContentRe(modifier((t, Js.Re.t, option(TextContent.options))))
+  | HaveTextContent(modifier((t, [`RegExp(Js.Re.t) | `Str(string)], option(TextContent.options))))
     : assertion;
 
 [@bs.val] external expect: t => Js.t({..}) = "expect";
@@ -90,13 +88,6 @@ let affirm =
     expect(expected)##(!)##toHaveTextContent(
       text,
       Js.Undefined.fromOption(opts),
-    )
-  | HaveTextContentRe(`Just(expected, text, opts)) =>
-    expect(expected)##toHaveTextContent(text, Js.Undefined.fromOption(opts))
-  | HaveTextContentRe(`Not(expected, text, opts)) =>
-    expect(expected)##(!)##toHaveTextContent(
-      text,
-      Js.Undefined.fromOption(opts),
     );
 
 let toBeDisabled = expected =>
@@ -127,13 +118,18 @@ let toHaveAttribute = (attribute, ~value=?, expected) =>
   ->toJestAssertion;
 
 let toHaveClass = (class_, expected) =>
-  HaveClass(mapMod(exp => (exp, class_), expected))
-  ->affirm
-  ->toJestAssertion;
-
-let toHaveClassMany = (classes, expected) =>
-  HaveClass(mapMod(exp => (exp, classes->joinList), expected))
-  ->affirm
+  HaveClass(
+    mapMod(
+      exp => (
+        exp,
+        switch (class_) {
+        | `Str(s) => s
+        | `Lst(lst) => lst->joinList
+        },
+      ),
+      expected,
+    ),
+  )
   ->toJestAssertion;
 
 let toHaveFocus = expected =>
@@ -152,7 +148,3 @@ let toHaveTextContent = (text, ~options=?, expected) =>
   ->affirm
   ->toJestAssertion;
 
-let toHaveTextContentRe = (text, ~options=?, expected) =>
-  HaveTextContentRe(mapMod(exp => (exp, text, options), expected))
-  ->affirm
-  ->toJestAssertion;

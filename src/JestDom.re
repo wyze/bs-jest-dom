@@ -31,8 +31,11 @@ type assertion =
     : assertion
   | HaveTextContentRe(modifier((t, Js.Re.t, option(TextContent.options))))
     : assertion
-  | HaveValue(modifier((t, [`Str(string) | `Lst(list(string)) | `Num(int)]))) : assertion
-  | HaveDisplayValue(modifier((t, [`Str(string) | `Lst(list(string))]))) : assertion
+  | HaveValue(modifier((t, string))) : assertion
+  | HaveValueInt(modifier((t, int))) : assertion
+  | HaveValueMany(modifier((t, array(string)))) : assertion
+  | HaveDisplayValue(modifier((t, string))) : assertion
+  | HaveDisplayValueMany(modifier((t, array(string)))) : assertion
   | BeChecked(modifier((t))) : assertion;
 
 [@bs.val] external expect: t => Js.t({..}) = "expect";
@@ -115,8 +118,14 @@ let affirm =
     )
   | HaveValue(`Just(expected, value)) => expect(expected)##toHaveValue(value)
   | HaveValue(`Not(expected, value)) => expect(expected)##(!)##toHaveValue(value)
+  | HaveValueInt(`Just(expected, value)) => expect(expected)##toHaveValue(value)
+  | HaveValueInt(`Not(expected, value)) => expect(expected)##(!)##toHaveValue(value)
+  | HaveValueMany(`Just(expected, value)) => expect(expected)##toHaveValue(value)
+  | HaveValueMany(`Not(expected, value)) => expect(expected)##(!)##toHaveValue(value)
   | HaveDisplayValue(`Just(expected, value)) => expect(expected)##toHaveDisplayValue(value)
   | HaveDisplayValue(`Not(expected, value)) => expect(expected)##(!)##toHaveDisplayValue(value)
+  | HaveDisplayValueMany(`Just(expected, value)) => expect(expected)##toHaveDisplayValue(value)
+  | HaveDisplayValueMany(`Not(expected, value)) => expect(expected)##(!)##toHaveDisplayValue(value)
   | BeChecked(`Just(expected)) => expect(expected)##toBeChecked()
   | BeChecked(`Not(expected)) => expect(expected)##(!)##toBeChecked();
 
@@ -198,12 +207,28 @@ let toHaveTextContent = (content, ~options=?, expected) =>
   ->toJestAssertion;
 
 let toHaveValue = (value, expected) =>
-  HaveValue(mapMod(exp => (exp, value), expected))
+  (
+    switch (value) {
+    | `Lst(lst) =>
+      HaveValueMany(mapMod(exp => (exp, lst->Array.of_list), expected))
+    | `Num(num) =>
+      HaveValueInt(mapMod(exp => (exp, num), expected))
+    | `Str(text) =>
+      HaveValue(mapMod(exp => (exp, text), expected))
+    }
+  )
   ->affirm
   ->toJestAssertion;
 
 let toHaveDisplayValue = (value, expected) =>
-  HaveDisplayValue(mapMod(exp => (exp, value), expected))
+  (
+    switch (value) {
+    | `Lst(lst) =>
+      HaveDisplayValueMany(mapMod(exp => (exp, lst->Array.of_list), expected))
+    | `Str(text) =>
+      HaveDisplayValue(mapMod(exp => (exp, text), expected))
+    }
+  )
   ->affirm
   ->toJestAssertion;
 

@@ -61,6 +61,21 @@ test("not toBeEnabled", () =>
   |> toBeEnabled
 );
 
+test("toBeEmpty", () =>
+  render({|<button data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toBeEmpty
+);
+
+test("not toBeEmpty", () =>
+  render({|<button disabled data-testid="button">Click me</button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toBeEmpty
+);
+
 test("toBeInTheDocument", () =>
   render({|<button data-testid="button"></button>|})
   |> queryByTestId("button")
@@ -77,6 +92,51 @@ test("not toBeInTheDocument", () =>
       |> not_
       |> toBeInTheDocument
   )
+);
+
+test("toBeInvalid", () =>
+  render({|<input required data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toBeInvalid
+);
+
+test("not toBeInvalid", () =>
+  render({|<input data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toBeInvalid
+);
+
+test("toBeRequired", () =>
+  render({|<input required data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toBeRequired
+);
+
+test("not toBeRequired", () =>
+  render({|<input data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toBeRequired
+);
+
+test("toBeValid", () =>
+  render({|<input data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toBeValid
+);
+
+test("not toBeValid", () =>
+  render({|<input required data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toBeValid
 );
 
 test("toBeVisible", () =>
@@ -284,4 +344,94 @@ test("not toHaveTextContent (regex)", () =>
   |> expect
   |> not_
   |> toHaveTextContent(`RegExp([%bs.re "/^\\d of 4$/"]))
+);
+
+test("toHaveValue (string)", () =>
+  render({|<input data-testid="input" value="5" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toHaveValue(`Str("5"))
+);
+
+test("not toHaveValue (string)", () =>
+  render({|<input data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toHaveValue(`Str("5"))
+);
+
+test("toHaveValue (num)", () =>
+  render({|<input type="number" data-testid="input" value="5" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toHaveValue(`Num(5))
+);
+
+test("not toHaveValue (num)", () =>
+  render({|<input type="number" data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toHaveValue(`Num(5))
+);
+
+test("toHaveValue (list)", () =>
+  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  |> queryByTestId("select")
+  |> expect
+  |> toHaveValue(`Lst(["apple", "orange"]))
+);
+
+test("not toHaveValue (list)", () =>
+  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  |> queryByTestId("select")
+  |> expect
+  |> not_
+  |> toHaveValue(`Lst(["apple", "peach"]))
+);
+
+test("toHaveDisplayValue (string)", () =>
+  render({|<input data-testid="input" value="Test" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toHaveDisplayValue(`Str("Test"))
+);
+
+test("not toHaveDisplayValue (string)", () =>
+  render({|<input data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toHaveDisplayValue(`Str("Test"))
+);
+
+test("toHaveDisplayValue (list)", () =>
+  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  |> queryByTestId("select")
+  |> expect
+  |> toHaveDisplayValue(`Lst(["Apple", "Orange"]))
+);
+
+test("not toHaveDisplayValue (list)", () =>
+  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  |> queryByTestId("select")
+  |> expect
+  |> not_
+  |> toHaveDisplayValue(`Lst(["Apple", "Peach"]))
+);
+
+test("toBeChecked", () =>
+  render({|<input type="checkbox" checked data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toBeChecked
+);
+
+test("not toBeChecked", () =>
+  render({|<input type="checkbox" data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toBeChecked
 );

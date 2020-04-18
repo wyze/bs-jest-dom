@@ -1,6 +1,6 @@
 # bs-jest-dom &middot; [![Build Status][actions-image]][actions-url] [![npm][npm-image]][npm-url] [![Codecov][codecov-image]][codecov-url]
 
-> [BuckleScript](//github.com/BuckleScript/bucklescript) bindings for [jest-dom](//github.com/gnapse/jest-dom).
+> [BuckleScript](//github.com/BuckleScript/bucklescript) bindings for [jest-dom](//github.com/testing-library/jest-dom).
 
 ## Installation
 
@@ -22,7 +22,7 @@ $ npm install --save-dev bs-jest-dom
 }
 ```
 
-#### With [`bs-jest`](//github.com/glennsl/bs-jest) and [`bs-jest-dom`](//github.com/wyze/bs-jest-dom)
+#### With [`bs-jest`](//github.com/glennsl/bs-jest) and [`bs-react-testing-library`](//github.com/wyze/bs-react-testing-library)
 
 ```ocaml
 /* Heading_test.re */
@@ -33,13 +33,8 @@ open JestDom;
 open ReactTestingLibrary;
 
 module Heading = {
-  let component = ReasonReact.statelessComponent("Heading");
-
-  let make = (~text, _children) => {
-    ...component,
-    render: _self =>
-      <h1> {ReasonReact.string(text)} </h1>,
-  };
+  [@react.component]
+  let make = (~text) => <h1> {ReasonReact.string(text)} </h1>;
 };
 
 test("renders in the document", () =>

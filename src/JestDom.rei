@@ -5,7 +5,7 @@ module TextContent: {
   type options = {. "normalizeWhitespace": Js.undefined(bool)};
 
   [@bs.obj]
-  external makeOptions: (~normalizeWhitespace: bool=?, unit) => options = "";
+  external makeOptions: (~normalizeWhitespace: bool=?, unit) => options;
 };
 
 let toBeDisabled: [< modifier(t)] => Jest.assertion;

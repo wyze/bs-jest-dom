@@ -8,7 +8,7 @@ module TextContent = {
   type options = {. "normalizeWhitespace": Js.undefined(bool)};
 
   [@bs.obj]
-  external makeOptions: (~normalizeWhitespace: bool=?, unit) => options = "";
+  external makeOptions: (~normalizeWhitespace: bool=?, unit) => options;
 };
 
 type assertion =
@@ -181,13 +181,14 @@ let toHaveAttribute = (attribute, ~value=?, expected) =>
 let toHaveClass = (class_, expected) =>
   HaveClass(
     mapMod(
-      exp => (
-        exp,
-        switch (class_) {
-        | `Str(s) => s
-        | `Lst(lst) => lst->joinList
-        },
-      ),
+      exp =>
+        (
+          exp,
+          switch (class_) {
+          | `Str(s) => s
+          | `Lst(lst) => lst->joinList
+          },
+        ),
       expected,
     ),
   )

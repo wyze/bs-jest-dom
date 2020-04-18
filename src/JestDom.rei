@@ -20,18 +20,23 @@ let toContainElement: (t, [< modifier(t)]) => Jest.assertion;
 let toContainHTML: (string, [< modifier(t)]) => Jest.assertion;
 let toHaveAttribute:
   (string, ~value: string=?, [< modifier(t)]) => Jest.assertion;
-let toHaveClass: ([`Str(string) | `Lst(list(string))], [< modifier(t)]) => Jest.assertion;
+let toHaveClass:
+  ([ | `Str(string) | `Lst(list(string))], [< modifier(t)]) =>
+  Jest.assertion;
 let toHaveFocus: [< modifier(t)] => Jest.assertion;
-let toHaveFormValues:
-  (Js.t({..}), [< modifier(t)]) => Jest.assertion;
+let toHaveFormValues: (Js.t({..}), [< modifier(t)]) => Jest.assertion;
 let toHaveStyle: (string, [< modifier(t)]) => Jest.assertion;
 let toHaveTextContent:
-  ([`RegExp(Js.Re.t) | `Str(string)], ~options: TextContent.options=?, [< modifier(t)]) =>
+  (
+    [ | `RegExp(Js.Re.t) | `Str(string)],
+    ~options: TextContent.options=?,
+    [< modifier(t)]
+  ) =>
   Jest.assertion;
 let toHaveValue:
-  ([`Str(string) | `Lst(list(string)) | `Num(int)], [< modifier(t)]) =>
+  ([ | `Str(string) | `Lst(list(string)) | `Num(int)], [< modifier(t)]) =>
   Jest.assertion;
 let toHaveDisplayValue:
-  ([`Str(string) | `Lst(list(string))], [< modifier(t)]) =>
+  ([ | `Str(string) | `Lst(list(string))], [< modifier(t)]) =>
   Jest.assertion;
 let toBeChecked: [< modifier(t)] => Jest.assertion;

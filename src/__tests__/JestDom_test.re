@@ -377,14 +377,18 @@ test("not toHaveValue (num)", () =>
 );
 
 test("toHaveValue (list)", () =>
-  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  render(
+    {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
+  )
   |> queryByTestId("select")
   |> expect
   |> toHaveValue(`Lst(["apple", "orange"]))
 );
 
 test("not toHaveValue (list)", () =>
-  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  render(
+    {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
+  )
   |> queryByTestId("select")
   |> expect
   |> not_
@@ -407,14 +411,18 @@ test("not toHaveDisplayValue (string)", () =>
 );
 
 test("toHaveDisplayValue (list)", () =>
-  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  render(
+    {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
+  )
   |> queryByTestId("select")
   |> expect
   |> toHaveDisplayValue(`Lst(["Apple", "Orange"]))
 );
 
 test("not toHaveDisplayValue (list)", () =>
-  render({|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|})
+  render(
+    {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
+  )
   |> queryByTestId("select")
   |> expect
   |> not_

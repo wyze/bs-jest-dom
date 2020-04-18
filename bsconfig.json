@@ -32,6 +32,7 @@
     "@glennsl/bs-jest"
   ],
   "bs-dev-dependencies": [
+    "bisect_ppx",
     "bs-webapi"
   ]
 }

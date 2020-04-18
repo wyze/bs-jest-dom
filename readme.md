@@ -97,10 +97,14 @@ $ yarn test
 
 > [Full Change Log](changelog.md)
 
-### [v2.0.2](https://github.com/wyze/bs-jest-dom/releases/tag/v2.0.2) (2020-04-12)
+### [v3.0.0](https://github.com/wyze/bs-jest-dom/releases/tag/v3.0.0) (2020-04-18)
 
-* Upgrade devDependencies to latest versions ([@wyze](https://github.com/wyze) in [b9302fa](https://github.com/wyze/bs-jest-dom/commit/b9302fa))
-* Move bs-jest to devDependencies ([@jihchi](https://github.com/jihchi) in [#11](https://github.com/wyze/bs-jest-dom/pull/11))
+* Add bisect_ppx to bs-dev-deps ([@wyze](https://github.com/wyze) in [#16](https://github.com/wyze/bs-jest-dom/pull/16))
+* Run refmt (again) on the project ([@wyze](https://github.com/wyze) in [1ae8ee4](https://github.com/wyze/bs-jest-dom/commit/1ae8ee4))
+* Upgrade to jest-dom v5.5.0 ([@wyze](https://github.com/wyze) in [#15](https://github.com/wyze/bs-jest-dom/pull/15))
+* Update toHaveClass/toHaveTextContent method signatures ([@wyze](https://github.com/wyze) in [#14](https://github.com/wyze/bs-jest-dom/pull/14))
+* Fix GitHub security alerts ([@wyze](https://github.com/wyze) in [d2594c2](https://github.com/wyze/bs-jest-dom/commit/d2594c2))
+* Switch to GitHub actions ([@wyze](https://github.com/wyze) in [#13](https://github.com/wyze/bs-jest-dom/pull/13))
 
 ## License
 

@@ -1,5 +1,11 @@
+type expect;
 type t = Dom.element;
-// type modifier('a) = [ | `Just('a) | `Not('a)];
+
+module HaveClass: {
+  type options = {. "exact": Js.undefined(bool)};
+
+  [@bs.obj] external makeOptions: (~exact: bool=?, unit) => options;
+};
 
 module TextContent: {
   type options = {. "normalizeWhitespace": Js.undefined(bool)};
@@ -8,9 +14,6 @@ module TextContent: {
   external makeOptions: (~normalizeWhitespace: bool=?, unit) => options;
 };
 
-/* New */
-
-type expect;
 [@bs.val] external expect: t => expect = "expect";
 [@bs.get] external not_: expect => expect = "not";
 
@@ -25,36 +28,27 @@ let toBeVisible: expect => Jest.assertion;
 let toContainElement: (t, expect) => Jest.assertion;
 let toContainHTML: (string, expect) => Jest.assertion;
 let toHaveAttribute: (string, ~value: string=?, expect) => Jest.assertion;
-
-// let toBeDisabled: [< modifier(t)] => Jest.assertion;
-// let toBeEnabled: [< modifier(t)] => Jest.assertion;
-// let toBeEmpty: [< modifier(t)] => Jest.assertion;
-// let toBeInTheDocument: [< modifier(t)] => Jest.assertion;
-// let toBeInvalid: [< modifier(t)] => Jest.assertion;
-// let toBeRequired: [< modifier(t)] => Jest.assertion;
-// let toBeValid: [< modifier(t)] => Jest.assertion;
-// let toBeVisible: [< modifier(t)] => Jest.assertion;
-// let toContainElement: (t, [< modifier(t)]) => Jest.assertion;
-// // let toContainHTML: (string, [< modifier(t)]) => Jest.assertion;
-// let toHaveAttribute:
-//   (string, ~value: string=?, [< modifier(t)]) => Jest.assertion;
-// let toHaveClass:
-//   ([ | `Str(string) | `Lst(list(string))], [< modifier(t)]) =>
-//   Jest.assertion;
-// let toHaveFocus: [< modifier(t)] => Jest.assertion;
-// let toHaveFormValues: (Js.t({..}), [< modifier(t)]) => Jest.assertion;
-// let toHaveStyle: (string, [< modifier(t)]) => Jest.assertion;
-// let toHaveTextContent:
-//   (
-//     [ | `RegExp(Js.Re.t) | `Str(string)],
-//     ~options: TextContent.options=?,
-//     [< modifier(t)]
-//   ) =>
-//   Jest.assertion;
-// let toHaveValue:
-//   ([ | `Str(string) | `Lst(list(string)) | `Num(int)], [< modifier(t)]) =>
-//   Jest.assertion;
-// let toHaveDisplayValue:
-//   ([ | `Str(string) | `Lst(list(string))], [< modifier(t)]) =>
-//   Jest.assertion;
-// let toBeChecked: [< modifier(t)] => Jest.assertion;
+let toHaveClass:
+  (
+    [ | `Str(string) | `Lst(list(string))],
+    ~options: HaveClass.options=?,
+    expect
+  ) =>
+  Jest.assertion;
+let toHaveFocus: expect => Jest.assertion;
+let toHaveFormValues: (Js.t({..}), expect) => Jest.assertion;
+let toHaveStyle:
+  ([ | `Str(string) | `Obj(Js.t({..}))], expect) => Jest.assertion;
+let toHaveTextContent:
+  (
+    [ | `Str(string) | `RegExp(Js.Re.t)],
+    ~options: TextContent.options=?,
+    expect
+  ) =>
+  Jest.assertion;
+let toHaveValue:
+  ([ | `Str(string) | `Arr(array(string)) | `Num(int)], expect) =>
+  Jest.assertion;
+let toHaveDisplayValue:
+  ([ | `Str(string) | `Arr(array(string))], expect) => Jest.assertion;
+let toBeChecked: expect => Jest.assertion;

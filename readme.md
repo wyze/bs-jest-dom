@@ -28,7 +28,6 @@ $ npm install --save-dev bs-jest-dom
 /* Heading_test.re */
 
 open Jest;
-open Expect;
 open JestDom;
 open ReactTestingLibrary;
 
@@ -52,7 +51,6 @@ test("renders in the document", () =>
 /* Heading_test.re */
 
 open Jest;
-open Expect;
 open JestDom;
 open Webapi.Dom;
 open Webapi.Dom.Element;

@@ -1,7 +1,6 @@
 [@coverage exclude_file];
 
 open Jest;
-open Expect;
 open JestDom;
 open Webapi.Dom;
 open Webapi.Dom.Element;
@@ -160,12 +159,8 @@ test("toContainElement", () => {
   element
   |> queryByTestId("span")
   |> expect
-  |> (
-       switch (document->Document.documentElement |> querySelector("button")) {
-       | Some(el) => el
-       | None => raise(Failure("Element not found"))
-       }
-     )
+  |> "button"
+     ->querySelector(document->Document.documentElement)
      ->toContainElement;
 });
 
@@ -176,7 +171,10 @@ test("not toContainElement", () => {
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> Document.createElement("div", document)->toContainElement;
+  |> "div"
+     ->Document.createElement(document)
+     ->Some
+     ->toContainElement;
 });
 
 test("toContainHTML", () =>
@@ -254,6 +252,27 @@ test("not toHaveClass (list)", () =>
   |> toHaveClass(`Lst(["empty", "hidden"]))
 );
 
+test("toHaveClass (string) [exact]", () =>
+  render({|<span class="empty hidden" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveClass(
+       `Str("empty hidden"),
+       ~options=HaveClass.makeOptions(~exact=true, ()),
+     )
+);
+
+test("not toHaveClass (string) [exact]", () =>
+  render({|<span class="hidden" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveClass(
+       `Str("empty"),
+       ~options=HaveClass.makeOptions(~exact=true, ()),
+     )
+);
+
 test("toHaveFocus", () => {
   let element = render({|<span tabindex="1" data-testid="span"></span>|});
 
@@ -292,19 +311,34 @@ test("not toHaveFormValues", () =>
   |> toHaveFormValues({"title": "CTO"})
 );
 
-test("toHaveStyle", () =>
+test("toHaveStyle (string)", () =>
   render({|<span style="color: rebeccapurple" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveStyle("color: rebeccapurple")
+  |> toHaveStyle(`Str("color: rebeccapurple"))
 );
 
-test("not toHaveStyle", () =>
+test("not toHaveStyle (string)", () =>
   render({|<span style="display: none" data-testid="span"></span>|})
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> toHaveStyle("display: inline-block")
+  |> toHaveStyle(`Str("display: inline-block"))
+);
+
+test("toHaveStyle (object)", () =>
+  render({|<span style="color: rebeccapurple" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> toHaveStyle(`Obj({"color": "rebeccapurple"}))
+);
+
+test("not toHaveStyle (object)", () =>
+  render({|<span style="display: none" data-testid="span"></span>|})
+  |> queryByTestId("span")
+  |> expect
+  |> not_
+  |> toHaveStyle(`Obj({"display": "inline-block"}))
 );
 
 test("toHaveTextContent (string)", () =>
@@ -322,14 +356,15 @@ test("not toHaveTextContent (string)", () =>
   |> toHaveTextContent(`Str("Step 1 of 4"))
 );
 
-test("toHaveTextContent (string) with options", () => {
-  let options = TextContent.makeOptions(~normalizeWhitespace=false, ());
-
+test("toHaveTextContent (string) with options", () =>
   render({|<span data-testid="span">&nbsp;&nbsp;Step 1 of 4</span>|})
   |> queryByTestId("span")
   |> expect
-  |> toHaveTextContent(`Str("  Step 1 of 4"), ~options);
-});
+  |> toHaveTextContent(
+       `Str("  Step 1 of 4"),
+       ~options=TextContent.makeOptions(~normalizeWhitespace=false, ()),
+     )
+);
 
 test("toHaveTextContent (regex)", () =>
   render({|<span data-testid="span">Step 1 of 4</span>|})
@@ -376,13 +411,13 @@ test("not toHaveValue (num)", () =>
   |> toHaveValue(`Num(5))
 );
 
-test("toHaveValue (list)", () =>
+test("toHaveValue (array)", () =>
   render(
     {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
   )
   |> queryByTestId("select")
   |> expect
-  |> toHaveValue(`Lst(["apple", "orange"]))
+  |> toHaveValue(`Arr([|"apple", "orange"|]))
 );
 
 test("not toHaveValue (list)", () =>
@@ -392,7 +427,7 @@ test("not toHaveValue (list)", () =>
   |> queryByTestId("select")
   |> expect
   |> not_
-  |> toHaveValue(`Lst(["apple", "peach"]))
+  |> toHaveValue(`Arr([|"apple", "peach"|]))
 );
 
 test("toHaveDisplayValue (string)", () =>
@@ -410,23 +445,23 @@ test("not toHaveDisplayValue (string)", () =>
   |> toHaveDisplayValue(`Str("Test"))
 );
 
-test("toHaveDisplayValue (list)", () =>
+test("toHaveDisplayValue (array)", () =>
   render(
     {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
   )
   |> queryByTestId("select")
   |> expect
-  |> toHaveDisplayValue(`Lst(["Apple", "Orange"]))
+  |> toHaveDisplayValue(`Arr([|"Apple", "Orange"|]))
 );
 
-test("not toHaveDisplayValue (list)", () =>
+test("not toHaveDisplayValue (array)", () =>
   render(
     {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},
   )
   |> queryByTestId("select")
   |> expect
   |> not_
-  |> toHaveDisplayValue(`Lst(["Apple", "Peach"]))
+  |> toHaveDisplayValue(`Arr([|"Apple", "Peach"|]))
 );
 
 test("toBeChecked", () =>

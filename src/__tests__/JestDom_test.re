@@ -159,12 +159,8 @@ test("toContainElement", () => {
   element
   |> queryByTestId("span")
   |> expect
-  |> (
-       switch (document->Document.documentElement |> querySelector("button")) {
-       | Some(el) => el
-       | None => raise(Failure("Element not found"))
-       }
-     )
+  |> "button"
+     ->querySelector(document->Document.documentElement)
      ->toContainElement;
 });
 
@@ -175,7 +171,10 @@ test("not toContainElement", () => {
   |> queryByTestId("span")
   |> expect
   |> not_
-  |> Document.createElement("div", document)->toContainElement;
+  |> "div"
+     ->Document.createElement(document)
+     ->Some
+     ->toContainElement;
 });
 
 test("toContainHTML", () =>

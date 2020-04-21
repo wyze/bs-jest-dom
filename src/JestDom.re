@@ -56,11 +56,11 @@ let toBeValid = _toBeValid->pass;
 
 let toBeVisible = _toBeVisible->pass;
 
-// TODO: Support JS.nullable
 [@bs.send.pipe: expect]
-external _toContainElement: t => unit = "toContainElement";
+external _toContainElement: Js.nullable(t) => unit = "toContainElement";
 
-let toContainElement = element => element->_toContainElement->pass;
+let toContainElement = element =>
+  element->Js.Nullable.fromOption->_toContainElement->pass;
 
 [@bs.send.pipe: expect]
 external _toContainHTML: string => unit = "toContainHTML";

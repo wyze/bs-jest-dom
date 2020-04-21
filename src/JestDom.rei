@@ -25,7 +25,7 @@ let toBeInvalid: expect => Jest.assertion;
 let toBeRequired: expect => Jest.assertion;
 let toBeValid: expect => Jest.assertion;
 let toBeVisible: expect => Jest.assertion;
-let toContainElement: (t, expect) => Jest.assertion;
+let toContainElement: (option(t), expect) => Jest.assertion;
 let toContainHTML: (string, expect) => Jest.assertion;
 let toHaveAttribute: (string, ~value: string=?, expect) => Jest.assertion;
 let toHaveClass:

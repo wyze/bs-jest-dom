@@ -1,5 +1,10 @@
 ## Change Log
 
+### [v4.0.0](https://github.com/wyze/bs-jest-dom/releases/tag/v4.0.0) (2020-04-21)
+
+* Update readme.md ([@wyze](https://github.com/wyze) in [40ba55b](https://github.com/wyze/bs-jest-dom/commit/40ba55b))
+* Convert matchers to externals ([@wyze](https://github.com/wyze) in [#17](https://github.com/wyze/bs-jest-dom/pull/17))
+
 ### [v3.0.0](https://github.com/wyze/bs-jest-dom/releases/tag/v3.0.0) (2020-04-18)
 
 * Add bisect_ppx to bs-dev-deps ([@wyze](https://github.com/wyze) in [#16](https://github.com/wyze/bs-jest-dom/pull/16))

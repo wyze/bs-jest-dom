@@ -445,6 +445,21 @@ test("not toHaveDisplayValue (string)", () =>
   |> toHaveDisplayValue(`Str("Test"))
 );
 
+test("toHaveDisplayValue (regex)", () =>
+  render({|<input data-testid="input" value="Test" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toHaveDisplayValue(`RegExp([%bs.re "/^Te/"]))
+);
+
+test("not toHaveDisplayValue (regex)", () =>
+  render({|<input data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toHaveDisplayValue(`RegExp([%bs.re "/Tt/"]))
+);
+
 test("toHaveDisplayValue (array)", () =>
   render(
     {|<select data-testid="select" multiple><option value=""></option><option value="apple" selected>Apple</option><option value="peach">Peach</option><option value="orange" selected>Orange</option></select>|},

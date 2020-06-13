@@ -50,7 +50,7 @@ let toHaveValue:
   ([ | `Str(string) | `Arr(array(string)) | `Num(int)], expect) =>
   Jest.assertion;
 let toHaveDisplayValue:
-  ([ | `Str(string) | `Arr(array(string))], expect) => Jest.assertion;
+  ([ | `Str(string) | `RegExp(Js.Re.t) | `Arr(array(string))], expect) => Jest.assertion;
 let toBeChecked: expect => Jest.assertion;
 let toHaveDescription:
   ([ | `Str(string) | `RegExp(Js.Re.t)], expect) => Jest.assertion;

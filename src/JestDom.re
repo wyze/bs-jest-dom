@@ -126,7 +126,11 @@ let toHaveValue = value => value->_toHaveValue->pass;
 
 [@bs.send.pipe: expect]
 external _toHaveDisplayValue:
-  ([@bs.unwrap] [ | `Str(string) | `Arr(array(string))]) => unit =
+  (
+  [@bs.unwrap]
+  [ | `Str(string) | `RegExp(Js.Re.t) | `Arr(array(string))]
+  ) =>
+  unit =
   "toHaveDisplayValue";
 
 let toHaveDisplayValue = value => value->_toHaveDisplayValue->pass;

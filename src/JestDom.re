@@ -134,3 +134,10 @@ let toHaveDisplayValue = value => value->_toHaveDisplayValue->pass;
 [@bs.send.pipe: expect] external _toBeChecked: unit = "toBeChecked";
 
 let toBeChecked = _toBeChecked->pass;
+
+[@bs.send.pipe: expect]
+external _toHaveDescription:
+  ([@bs.unwrap] [ | `Str(string) | `RegExp(Js.Re.t)]) => unit =
+  "toHaveDescription";
+
+let toHaveDescription = content => content->_toHaveDescription->pass;

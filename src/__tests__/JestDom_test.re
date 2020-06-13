@@ -478,3 +478,33 @@ test("not toBeChecked", () =>
   |> not_
   |> toBeChecked
 );
+
+test("toHaveDescription (string)", () =>
+  render({|<span><button data-testid="button" aria-label="Close" aria-describedby="description-close">X</button><div id="description-close">Closing will discard any changes</div></span>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toHaveDescription(`Str("Closing will discard any changes"))
+);
+
+test("not toHaveDescription (string)", () =>
+  render({|<span><button data-testid="button" aria-label="Close" aria-describedby="description-close">X</button><div id="description-close">Closing will discard any changes</div></span>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toHaveDescription(`Str("Other description"))
+);
+
+test("toHaveDescription (regex)", () =>
+  render({|<span><button data-testid="button" aria-label="Close" aria-describedby="description-close">X</button><div id="description-close">Closing will discard any changes</div></span>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toHaveDescription(`RegExp([%bs.re "/will discard/"]))
+);
+
+test("not toHaveDescription (regex)", () =>
+  render({|<span><button data-testid="button" aria-label="Close" aria-describedby="description-close">X</button><div id="description-close">Closing will discard any changes</div></span>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toHaveDescription(`RegExp([%bs.re "/^Other/"]))
+);

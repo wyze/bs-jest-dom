@@ -48,6 +48,6 @@
     "rimraf": "^3.0.2"
   },
   "peerDependencies": {
-    "@glennsl/bs-jest": "^0.4.8"
+    "@glennsl/bs-jest": "^0.4.8 || ^0.5.1"
   }
 }

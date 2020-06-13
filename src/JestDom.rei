@@ -20,6 +20,7 @@ module TextContent: {
 let toBeDisabled: expect => Jest.assertion;
 let toBeEnabled: expect => Jest.assertion;
 let toBeEmpty: expect => Jest.assertion;
+let toBeEmptyDOMElement: expect => Jest.assertion;
 let toBeInTheDocument: expect => Jest.assertion;
 let toBeInvalid: expect => Jest.assertion;
 let toBeRequired: expect => Jest.assertion;

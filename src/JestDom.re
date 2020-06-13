@@ -36,6 +36,11 @@ let toBeEnabled = _toBeEnabled->pass;
 let toBeEmpty = _toBeEmpty->pass;
 
 [@bs.send.pipe: expect]
+external _toBeEmptyDOMElement: unit = "toBeEmptyDOMElement";
+
+let toBeEmptyDOMElement = _toBeEmptyDOMElement->pass;
+
+[@bs.send.pipe: expect]
 external _toBeInTheDocument: unit = "toBeInTheDocument";
 
 let toBeInTheDocument = _toBeInTheDocument->pass;

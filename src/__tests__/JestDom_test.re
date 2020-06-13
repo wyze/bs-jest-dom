@@ -75,6 +75,21 @@ test("not toBeEmpty", () =>
   |> toBeEmpty
 );
 
+test("toBeEmptyDOMElement", () =>
+  render({|<button data-testid="button"></button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> toBeEmptyDOMElement
+);
+
+test("not toBeEmptyDOMElement", () =>
+  render({|<button disabled data-testid="button">Click me</button>|})
+  |> queryByTestId("button")
+  |> expect
+  |> not_
+  |> toBeEmptyDOMElement
+);
+
 test("toBeInTheDocument", () =>
   render({|<button data-testid="button"></button>|})
   |> queryByTestId("button")

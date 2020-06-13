@@ -52,5 +52,6 @@ let toHaveValue:
 let toHaveDisplayValue:
   ([ | `Str(string) | `RegExp(Js.Re.t) | `Arr(array(string))], expect) => Jest.assertion;
 let toBeChecked: expect => Jest.assertion;
+let toBePartiallyChecked: expect => Jest.assertion;
 let toHaveDescription:
   ([ | `Str(string) | `RegExp(Js.Re.t)], expect) => Jest.assertion;

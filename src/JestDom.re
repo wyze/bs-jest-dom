@@ -140,6 +140,11 @@ let toHaveDisplayValue = value => value->_toHaveDisplayValue->pass;
 let toBeChecked = _toBeChecked->pass;
 
 [@bs.send.pipe: expect]
+external _toBePartiallyChecked: unit = "toBePartiallyChecked";
+
+let toBePartiallyChecked = _toBePartiallyChecked->pass;
+
+[@bs.send.pipe: expect]
 external _toHaveDescription:
   ([@bs.unwrap] [ | `Str(string) | `RegExp(Js.Re.t)]) => unit =
   "toHaveDescription";

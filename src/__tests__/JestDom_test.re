@@ -494,6 +494,21 @@ test("not toBeChecked", () =>
   |> toBeChecked
 );
 
+test("toBePartiallyChecked", () =>
+  render({|<input type="checkbox" aria-checked="mixed" data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> toBePartiallyChecked
+);
+
+test("not toBePartiallyChecked", () =>
+  render({|<input type="checkbox" checked data-testid="input" />|})
+  |> queryByTestId("input")
+  |> expect
+  |> not_
+  |> toBePartiallyChecked
+);
+
 test("toHaveDescription (string)", () =>
   render({|<span><button data-testid="button" aria-label="Close" aria-describedby="description-close">X</button><div id="description-close">Closing will discard any changes</div></span>|})
   |> queryByTestId("button")

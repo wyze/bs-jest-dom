@@ -1,5 +1,14 @@
 ## Change Log
 
+### [v4.1.0](https://github.com/wyze/bs-jest-dom/releases/tag/v4.1.0) (2020-06-13)
+
+* Add toBeEmptyDOMElement in favor of toBeEmpty ([@wyze](https://github.com/wyze) in [456326f](https://github.com/wyze/bs-jest-dom/commit/456326f))
+* Add toBePartiallyChecked matcher ([@wyze](https://github.com/wyze) in [688dbbc](https://github.com/wyze/bs-jest-dom/commit/688dbbc))
+* Allow regex in toHaveDisplayValue matcher ([@wyze](https://github.com/wyze) in [7bfdbbf](https://github.com/wyze/bs-jest-dom/commit/7bfdbbf))
+* Add toHaveDescription matcher ([@wyze](https://github.com/wyze) in [3049f11](https://github.com/wyze/bs-jest-dom/commit/3049f11))
+* Upgrade dependencies ([@wyze](https://github.com/wyze) in [9c564df](https://github.com/wyze/bs-jest-dom/commit/9c564df))
+* Update peerDependency for @glennsl/bs-jest ([@wyze](https://github.com/wyze) in [af104b7](https://github.com/wyze/bs-jest-dom/commit/af104b7))
+
 ### [v4.0.0](https://github.com/wyze/bs-jest-dom/releases/tag/v4.0.0) (2020-04-21)
 
 * Update readme.md ([@wyze](https://github.com/wyze) in [40ba55b](https://github.com/wyze/bs-jest-dom/commit/40ba55b))

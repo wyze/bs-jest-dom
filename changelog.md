@@ -1,5 +1,9 @@
 ## Change Log
 
+### [v4.1.1](https://github.com/wyze/bs-jest-dom/releases/tag/v4.1.1) (2020-06-17)
+
+* Fix JSX and bs-webapi to compile on BS 8 ([@johnridesabike](https://github.com/johnridesabike) in [#20](https://github.com/wyze/bs-jest-dom/pull/20))
+
 ### [v4.1.0](https://github.com/wyze/bs-jest-dom/releases/tag/v4.1.0) (2020-06-13)
 
 * Add toBeEmptyDOMElement in favor of toBeEmpty ([@wyze](https://github.com/wyze) in [456326f](https://github.com/wyze/bs-jest-dom/commit/456326f))

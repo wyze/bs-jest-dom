@@ -15,9 +15,10 @@
     "bsconfig.json"
   ],
   "scripts": {
-    "build": "bsb -make-world",
+    "watch": "rescript build -w",
+    "build": "rescript build",
     "clean": "run-p clean:*",
-    "clean:bsb": "bsb -clean-world",
+    "clean:bsb": "rescript clean",
     "clean:project": "rimraf _coverage lib .merlin *.coverage",
     "jest": "jest",
     "postversion": "github-release",
@@ -38,16 +39,14 @@
     "@testing-library/jest-dom": "^5.10.0"
   },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.5.1",
+    "@glennsl/rescript-jest": "^0.9.0",
     "@wyze/changelog": "^1.0.0",
     "@wyze/github-release": "^1.1.1",
-    "bisect_ppx": "^2.4.1",
-    "bs-platform": "^7.3.2",
-    "bs-webapi": "^0.16.0",
+    "bisect_ppx": "^2.7.1",
     "npm-run-all": "^4.1.5",
+    "rescript": "^9.1.4",
+    "rescript-webapi": "^0.6.0",
     "rimraf": "^3.0.2"
   },
-  "peerDependencies": {
-    "@glennsl/bs-jest": "^0.4.8 || ^0.5.1"
-  }
+  "peerDependencies": {}
 }

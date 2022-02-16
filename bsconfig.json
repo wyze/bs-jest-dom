@@ -29,10 +29,10 @@
     }
   ],
   "bs-dependencies": [
-    "@glennsl/bs-jest"
+    "@glennsl/rescript-jest"
   ],
   "bs-dev-dependencies": [
     "bisect_ppx",
-    "bs-webapi"
+    "rescript-webapi"
   ]
 }
